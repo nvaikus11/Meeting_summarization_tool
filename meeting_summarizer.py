@@ -2,9 +2,8 @@ import openai
 import tkinter as tk
 from tkinter import scrolledtext
 
-# Set up your OpenAI API Key
-OPENAI_API_KEY = "your-api-key-here"
-openai.api_key = OPENAI_API_KEY
+# Initialize OpenAI client
+client = openai.OpenAI(api_key="Add API Key Here")
 
 # Function to get summary from GPT-4
 def generate_summary():
@@ -18,27 +17,27 @@ def generate_summary():
     Here is a meeting transcript:
     {transcript}
 
-    Generate a structured summary including:
-    1) A brief summary of the meeting
-    2) What went well
-    3) What did not go well
-    4) How can I improve?
-
-    Format:
-    Summary: ...
-    What Went Well: ...
-    What Did Not Go Well: ...
-    Improvement Suggestions: ...
+    Generate a structured summary with the following sections:
+    - Summary: A short overview of the meeting.
+    - What Went Well: Key positives from the discussion.
+    - What Did Not Go Well: Areas that need improvement.
+    - Improvement Suggestions: Actionable ideas or recommendations.
     """
 
     try:
-        response = openai.ChatCompletion.create(
+        output_text.delete("1.0", tk.END)
+        output_text.insert(tk.END, "Generating summary, please wait...")
+        root.update_idletasks()
+
+        response = client.chat.completions.create(
             model="gpt-4",
-            messages=[{"role": "system", "content": "You are an AI assistant that summarizes meetings."},
-                      {"role": "user", "content": prompt}]
+            messages=[
+                {"role": "system", "content": "You are an AI assistant that summarizes meetings."},
+                {"role": "user", "content": prompt}
+            ]
         )
 
-        summary = response["choices"][0]["message"]["content"]
+        summary = response.choices[0].message.content
 
         output_text.delete("1.0", tk.END)
         output_text.insert(tk.END, summary)
@@ -70,3 +69,4 @@ output_text.pack()
 
 # Run the Tkinter App
 root.mainloop()
+
