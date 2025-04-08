@@ -1,5 +1,3 @@
-# Meeting_summarization_tool
-This automation will help summarize meeting transcripts
 # AI-Powered Meeting Summarization Tool
 
 ## Overview
